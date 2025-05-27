@@ -3,136 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mutated Crop Value Calculator</title>
+  <title>Mutated Crop Value Calculator - Nature Edition</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
       padding: 20px;
-      background: linear-gradient(to right, #e0f7fa, #e0f2f1);
-      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
     }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #00796b;
-    }
-    label {
-      margin-top: 10px;
-      font-weight: 600;
-      display: block;
-    }
-    select, input[type=number] {
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+      animation: float 20s ease-in-out infinite;
+      z-index: 0;
     }
-    .checkbox-group {
-      margin-bottom: 20px;
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
     }
-    .checkbox-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: normal;
-    }
-    button {
-      padding: 12px;
+    
+    .floating-shapes {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      background: #00796b;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #004d40;
-    }
-    .result {
-      margin-top: 25px;
-      font-size: 1.2em;
-      font-weight: bold;
-      text-align: center;
-      color: #004d40;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>🌾 Mutated Crop Value Calculator 🌾</h2>
-    <label for="baseValue">Base Value</label>
-    <input type="number" id="baseValue" value="8000000">
-
-    <label for="growthMutation">Growth Mutation</label>
-    <select id="growthMutation">
-      <option value="1">Default (×1)</option>
-      <option value="25">Golden (×25)</option>
-      <option value="50">Rainbow (×50)</option>
-    </select>
-
-    <label>Environmental Mutations (check all that apply):</label>
-    <div class="checkbox-group">
-      <label><input type="checkbox" class="stack" value="1"> Wet / Chilled / Moonlit / Chocolate</label>
-      <label><input type="checkbox" class="stack" value="3"> Bloodlit</label>
-      <label><input type="checkbox" class="stack" value="9"> Frozen</label>
-      <label><input type="checkbox" class="stack" value="24"> Zombified</label>
-      <label><input type="checkbox" class="stack" value="99"> Shocked</label>
-      <label><input type="checkbox" class="stack" value="119"> Celestial</label>
-      <label><input type="checkbox" class="stack" value="124"> Disco</label>
-      <label><input type="checkbox" class="stack" value="4"> Plasma</label>
-    </div>
-
-    <button onclick="calculateValue()">🔍 Calculate</button>
-    <div class="result" id="result"></div>
-  </div>
-
-  <script>
-    function numberToWords(num) {
-      const formatter = new Intl.NumberFormat('en-US', { style: 'decimal' });
-      const simpleWords = [
-        [1e12, 'trillion'],
-        [1e9, 'billion'],
-        [1e6, 'million'],
-        [1e3, 'thousand']
-      ];
-
-      for (const [value, label] of simpleWords) {
-        if (num >= value) {
-          return formatter.format((num / value).toFixed(2)) + ' ' + label;
-        }
-      }
-      return formatter.format(num);
-    }
-
-    function calculateValue() {
-      const base = parseFloat(document.getElementById("baseValue").value);
-      const growth = parseFloat(document.getElementById("growthMutation").value);
-      let stackSum = 0;
-
-      document.querySelectorAll(".stack:checked").forEach(cb => {
-        stackSum += parseFloat(cb.value);
-      });
-
-      const totalValue = base * growth * (1 + stackSum);
-      const wordValue = numberToWords(totalValue);
-
-      document.getElementById("result").innerHTML = `
-        💰 <strong>Total Value:</strong> ${totalValue.toLocaleString()} coins <br>
-        📝 <strong>In Words:</strong> ${wordValue} coins
-      `;
-    }
-  </script>
-</body>
-</html>
+      
